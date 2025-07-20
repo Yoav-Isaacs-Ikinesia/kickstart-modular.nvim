@@ -18,14 +18,48 @@ return {
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
+        add = { text = '┃' },
+        change = { text = '┃' },
+        delete = { text = '┃' },
+        topdelete = { text = '┃' },
+        changedelete = { text = '┃' },
       },
+      signs_staged = {
+        add = { text = '┃' },
+        change = { text = '┃' },
+        delete = { text = '┃' },
+        topdelete = { text = '┃' },
+        changedelete = { text = '┃' },
+      },
+      current_line_blame = true, -- Enable virtual text blame
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+        delay = 200,
+        ignore_whitespace = false,
+        virt_text_priority = 100,
+      },
+      current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
       on_attach = function(bufnr)
         local gitsigns = require 'gitsigns'
+
+        -- Set up highlight groups for colored signs
+        vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#28a745' }) -- Green
+        vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#0366d6' }) -- Blue
+        vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#d73a49' }) -- Red
+        vim.api.nvim_set_hl(0, 'GitSignsTopdelete', { fg = '#d73a49' }) -- Red
+        vim.api.nvim_set_hl(0, 'GitSignsChangedelete', { fg = '#0366d6' }) -- Blue
+
+        -- Staged signs colors
+        vim.api.nvim_set_hl(0, 'GitSignsAddPreview', { fg = '#28a745' })
+        vim.api.nvim_set_hl(0, 'GitSignsDeletePreview', { fg = '#d73a49' })
+
+        -- Git blame virtual text styling (shadow/dimmed appearance)
+        vim.api.nvim_set_hl(0, 'GitSignsCurrentLineBlame', {
+          fg = '#6a737d', -- Gray color for shadow effect
+          italic = true,
+          -- bg = 'NONE' -- Uncomment if you want transparent background
+        })
 
         local function map(mode, l, r, opts)
           opts = opts or {}
